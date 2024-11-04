@@ -3,8 +3,6 @@ import { Poligon } from "./common/poligon.mjs";
 
 const main = async () => {
   const openAi = new OpenAi();
-  // const response = await openAi.interact("Where are you?");
-
   const poligon = new Poligon("POLIGON");
   const data = await poligon.get();
   const response = await openAi.interact(
