@@ -6,7 +6,8 @@
   "scripts": {
     "poligon": "node --watch ./index.mjs",
     "S01E01": "node --watch ./tasks/S01E01.mjs",
-    "S01E02": "node --watch ./tasks/S01E02.mjs"
+    "S01E02": "node --watch ./tasks/S01E02.mjs",
+    "S01E03": "node --watch ./tasks/S01E03.mjs"
   },
   "author": "",
   "license": "ISC",

@@ -2,7 +2,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 
 dotenv.config();
-const { POLIGON_API } = process.env;
+const { SECRET_KEY } = process.env;
 const URL = "https://poligon.aidevs.pl/verify";
 const URL_DATA = "https://poligon.aidevs.pl/dane.txt";
 
@@ -26,7 +26,7 @@ export class Poligon {
     try {
       const response = await axios.post(URL, {
         task: this.taskId,
-        apikey: POLIGON_API,
+        apikey: SECRET_KEY,
         answer,
       });
 
