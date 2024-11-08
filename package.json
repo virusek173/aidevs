@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "answers for aidevs",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "poligon": "node --watch ./index.mjs",
-    "S01E01": "node --watch ./tasks/S01E01.mjs",
-    "S01E02": "node --watch ./tasks/S01E02.mjs",
-    "S01E03": "node --watch ./tasks/S01E03.mjs",
-    "S01E05": "node --watch ./tasks/S01E05.mjs"
+    "build": "tsc",
+    "start": "nodemon --exec tsx src/index.ts",
+    "poligon": "nodemon --exec tsx src/index.ts",
+    "S01E01": "nodemon --exec tsx src/tasks/S01E01.ts",
+    "S01E02": "nodemon --exec tsx src/tasks/S01E02.ts",
+    "S01E03": "nodemon --exec tsx src/tasks/S01E03.ts",
+    "S01E05": "nodemon --exec tsx src/tasks/S01E05.ts"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +21,11 @@
     "dotenv": "^16.4.5",
     "openai": "^4.70.2",
     "selenium-webdriver": "^4.26.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/selenium-webdriver": "^4.1.27",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
   }
 }
