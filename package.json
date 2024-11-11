@@ -11,7 +11,8 @@
     "S01E01": "nodemon --exec tsx src/tasks/S01E01.ts",
     "S01E02": "nodemon --exec tsx src/tasks/S01E02.ts",
     "S01E03": "nodemon --exec tsx src/tasks/S01E03.ts",
-    "S01E05": "nodemon --exec tsx src/tasks/S01E05.ts"
+    "S01E05": "nodemon --exec tsx src/tasks/S01E05.ts",
+    "S02E01": "nodemon --exec tsx src/tasks/S02E01/S02E01.ts"
   },
   "author": "",
   "license": "ISC",
