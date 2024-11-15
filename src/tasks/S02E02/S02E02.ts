@@ -1,8 +1,4 @@
-import { Whisper } from "../../common/whisper.js";
 import { OpenAi } from "../../common/openai.js";
-import axios from "axios";
-import dotenv from "dotenv";
-import * as fs from "fs";
 
 const mapsPath = "./src/tasks/S02E02/images";
 
