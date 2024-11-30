@@ -1,6 +1,13 @@
 import * as fs from "fs";
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import { z } from "zod";
+import { zodResponseFormat } from "openai/helpers/zod";
+
+const Response = z.object({
+  _toughts: z.string(),
+  answer: z.string(),
+});
 
 interface Message {
   role: "system" | "user";
@@ -17,6 +24,13 @@ export class OpenAi {
       role: "system",
       content: systemPrompt || "You are helpful ass",
     };
+  }
+
+  getFileTxt(imagePath: string): string {
+    const imageBuffer = fs.readFileSync(imagePath);
+    const txtContentFile = imageBuffer.toString();
+
+    return txtContentFile;
   }
 
   getImage(imagePath: string): string {
@@ -90,6 +104,7 @@ export class OpenAi {
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [this.systemContext, userContext],
+        response_format: zodResponseFormat(Response, "response"),
       });
 
       return completion.choices[0].message.content;

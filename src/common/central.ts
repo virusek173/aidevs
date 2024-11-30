@@ -20,18 +20,31 @@ export class Central {
     this.taskId = taskId;
   }
 
-  async verify(answer: string | null): Promise<any> {
+  async verify(answer: string | null | object): Promise<any> {
     try {
-      const response = await axios.post(`${URL_CENTRAL}/report`, {
+      const payload = {
         task: this.taskId,
         apikey: SECRET_KEY,
         answer,
-      });
+      };
+      console.log({ adres: `${URL_CENTRAL}/report`, payload });
+
+      const response = await axios.post(`${URL_CENTRAL}/report`, payload);
 
       return response.data;
-    } catch (error) {
-      console.error("Error:", (error as Error).message);
-      return undefined;
+    } catch (error: any) {
+      {
+        if (error.response) {
+          if (error.response.status === 400) {
+            console.error("Bad Request Error:", error.response.data);
+          } else {
+            console.error(
+              "Server responded with error:",
+              error.response.status
+            );
+          }
+        }
+      }
     }
   }
 }
