@@ -8,7 +8,6 @@ const openai = new OpenAi();
 const DATA_DIR = "./src/tasks/S03E01/pliki_z_fabryki";
 
 const main = async () => {
-  // Wczytaj wszystkie pliki
   const reportsDir = `${DATA_DIR}/reports`
   const factsDir = `${DATA_DIR}/facts`
 
@@ -44,7 +43,7 @@ const main = async () => {
   // Iterate over facts and run openai.interact for each entry
   // Define the type for important facts
   type ImportantFact = { answer: boolean; text: string };
-  let importantFactsMap: Record<string, ImportantFact> = {}; // Specify the type here
+  let importantFactsMap: Record<string, ImportantFact> = {}; 
 
   for (const fact of facts) {
     const response = await openaiFacts.interact(fact.text);
@@ -59,9 +58,6 @@ const main = async () => {
 
   console.log({ importantFactsMap });
   const importantFacts = Object.values(importantFactsMap).map((i: ImportantFact) => i.text);
-  // const importantFacts = Object.keys(importantFactsMap).map(i => )
-
-  // Przeiteruj po reports dodając facts do kontekstu i dodaj przefilrtowane materiały facts - opkreśl słowa kluczowe do każdego reportu
   const openaiKeywords = new OpenAi(`
     W pierwszej kolejności podaj słowa kluczowe na podstawie podanego głównego tekstu.
     Wyciągnij numer sektora z nazwy pliku jako słowo kluczowe.
@@ -97,7 +93,6 @@ const main = async () => {
   console.log({ reportsKeywords });
 
 
-  // Wyślij odpowiedź do centrali.
   const cental = new Central('dokumenty')
   const centralResponse = await cental.verify(reportsKeywords);
   console.log({ centralResponse });
