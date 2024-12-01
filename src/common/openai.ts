@@ -1,6 +1,9 @@
 import * as fs from "fs";
 import OpenAI from "openai";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import {
+  ChatCompletionMessageParam,
+  CreateEmbeddingResponse,
+} from "openai/resources/index.mjs";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 
@@ -24,6 +27,19 @@ export class OpenAi {
       role: "system",
       content: systemPrompt || "You are helpful ass",
     };
+  }
+
+  async createEmbedding(text: string): Promise<number[]> {
+    try {
+      const response: CreateEmbeddingResponse = await openai.embeddings.create({
+        model: "text-embedding-3-large",
+        input: text,
+      });
+      return response.data[0].embedding;
+    } catch (error) {
+      console.error("Error creating embedding:", error);
+      throw error;
+    }
   }
 
   getFileTxt(imagePath: string): string {
