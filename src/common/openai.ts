@@ -6,6 +6,7 @@ import {
 } from "openai/resources/index.mjs";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
+import axios from "axios";
 
 const Response = z.object({
   _toughts: z.string(),
@@ -49,11 +50,18 @@ export class OpenAi {
     return txtContentFile;
   }
 
-  getImage(imagePath: string): string {
-    const imageBuffer = fs.readFileSync(imagePath);
-    const imageBase64 = imageBuffer.toString("base64");
-
-    return imageBase64;
+  async getImage(imagePath: string): Promise<string> {
+    if (imagePath.startsWith("http")) {
+      return await axios
+        .get(imagePath, { responseType: "arraybuffer" })
+        .then((response) =>
+          Buffer.from(response.data, "binary").toString("base64")
+        );
+    } else {
+      const imageBuffer = fs.readFileSync(imagePath);
+      const imageBase64 = imageBuffer.toString("base64");
+      return imageBase64;
+    }
   }
 
   async visionGnerate(userPrompt: string): Promise<string> {
@@ -78,7 +86,7 @@ export class OpenAi {
     userPrompt: string,
     imagePath: string
   ): Promise<string | null> {
-    const imageBase64 = this.getImage(imagePath);
+    const imageBase64 = await this.getImage(imagePath);
 
     try {
       const completion = await openai.chat.completions.create({
@@ -100,6 +108,7 @@ export class OpenAi {
             ],
           },
         ],
+        response_format: zodResponseFormat(Response, "response"),
         max_tokens: 300,
       });
 
