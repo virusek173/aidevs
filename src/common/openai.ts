@@ -119,7 +119,7 @@ export class OpenAi {
     }
   }
 
-  async interact(userPrompt: string): Promise<string | null> {
+  async interact(userPrompt: string, model: string = "gpt-4o-mini", chainOfToughts: boolean = true): Promise<string | null> {
     const userContext: Message = {
       role: "user",
       content: userPrompt,
@@ -127,9 +127,9 @@ export class OpenAi {
 
     try {
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model,
         messages: [this.systemContext, userContext],
-        response_format: zodResponseFormat(Response, "response"),
+        ...(chainOfToughts ? { response_format: zodResponseFormat(Response, "response") } : null),
       });
 
       return completion.choices[0].message.content;
