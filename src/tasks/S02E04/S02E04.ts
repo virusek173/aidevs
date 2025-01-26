@@ -9,16 +9,6 @@ const DATA_DIR = "./src/tasks/S02E04/data";
 const openai = new OpenAi();
 const whisper = new Whisper();
 
-// const checkFileExistance = (path: string) => {
-//     const fileExists = fs.existsSync(path);
-//     const isEmpty = fileExists ? fs.statSync(path).size === 0 : true;
-
-//     if (fileExists && !isEmpty) {
-//         const transcriptionStream = fs.createReadStream(path);
-//         transcriptionsContext = await streamToString(transcriptionStream);
-//     }
-// }
-
 const handleFileType = {
   mp3: (path: string): Promise<string | null> => whisper.transcript(path),
   txt: (path: string): string => openai.getFileTxt(path),
@@ -46,31 +36,37 @@ const main = async () => {
 
   const openaiCategorizer = new OpenAi(`**Prompt for Text Categorization:**
 
-Please categorize the provided text using one of the following categories: "machines," "people," or "other."
+Please categorize the provided text using one of the following categories: "hardware," "people," or "other."
 
 ### Guidelines for Assigning Categories:
 
 1. **Machines**: 
-   - Choose this category if the text specifically mentions fixed hardware faults or issues related to the malfunctioning or repair of machines. 
+   - Choose this category if the text specifically mentions fixed hardware faults or issues related to the malfunctioning or repair of hardware. 
+   - **DO NOT** select the category if something about software was mentioned or updating.
+   - **DO NOT** select the category if something about updating.
 
 2. **People**: 
    - Select this category if the text includes:
      - Information about people being captured by robots or the potential for such capture.
-     - Indications of danger to people, such as mentions of threats or evidence of harm.
+     - Indications of danger to people, such as mentions of threats or evidence of harm and no food mentioned.
      - Traces of human presence suggesting non-normal scenarios (e.g., deserted areas with signs of previous human activity).
-   - **Do not** select this category if the text merely describes people normal life or describe something about people.
+   - **DO NOT** select this category if the text merely describes people normal life or describe something about people.
+   - **DO NOT** If it was mentioned about searching for people but no one was found.
+   - **DO NOT** If it was food mentioned.
 
 3. **Other**: 
-   - Choose this category for all other scenarios that do not clearly fit into "machines" or "people." 
+   - Choose this category for all other scenarios that do not clearly fit into "hardware" or "people." 
    - Use this category if there is any uncertainty in categorization or when the text includes names and surnames without context that fits the "people" category as defined above.
+   - Use this category if text is about software or updating.
+   - Use this category if food was mentioned.
 
 ### Important Notes:
 - Ensure that only **one** category is assigned per text.
-- Use "other" if there is any doubt or it does not distinctly belong to "machines" or "people."
+- Use "other" if there is any doubt or it does not distinctly belong to "hardware" or "people."
 
 ### _Thoughts Field:
 Before making your final decision, document your reasoning in the _thoughts field to ensure clarity and consistency 
-in the categorization process. This should include your reasoning behind choosing a specific category and any considerations regarding the presence of people or machines in the text.
+in the categorization process. This should include your reasoning behind choosing a specific category and any considerations regarding the presence of people or hardware in the text.
     `);
 
   const categories = await Promise.all(
@@ -79,7 +75,7 @@ in the categorization process. This should include your reasoning behind choosin
 
       const response =
         (await openaiCategorizer.interact(
-          `Assign a category to this prompt: ${data}`
+          `Assign a category to this prompt: ${data}`,
         )) || "{}";
       const category = JSON.parse(response)?.answer;
 
@@ -95,7 +91,7 @@ in the categorization process. This should include your reasoning behind choosin
       .map((i) => i.fileName)
       .sort(),
     hardware: categories
-      .filter((cat) => cat.category === "machines")
+      .filter((cat) => cat.category === "hardware")
       .map((i) => i.fileName)
       .sort(),
   };
@@ -105,7 +101,7 @@ in the categorization process. This should include your reasoning behind choosin
   const central = new Central("kategorie");
   const finalResponse = await central.verify(finalObject);
 
-  console.log({ finalResponse: finalResponse.data });
+  console.log({ finalResponse });
 };
 
 main();
