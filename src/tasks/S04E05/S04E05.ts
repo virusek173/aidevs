@@ -19,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PDF_NAME = "notatnik-rafala.pdf";
 const PDF_PATH = path.join(__dirname, 'data', PDF_NAME);
-const GC_KEY_PATH = path.join(__dirname, 'aidevsocr.json');
+const GC_KEY_PATH = 'aidevsocr.json';
 const gCClient = new ImageAnnotatorClient({
     keyFilename: GC_KEY_PATH
 });
