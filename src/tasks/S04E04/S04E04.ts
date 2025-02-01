@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { OpenAi } from '../../common/openai.js';
-import https from 'https';
 
 const app = express()
 
